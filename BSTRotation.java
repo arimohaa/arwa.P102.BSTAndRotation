@@ -10,34 +10,74 @@ public class BSTRotation<T extends Comparable<T>> extends BinarySearchTree_Place
      * @param parent is the node being rotated from parent to child position
      */
     protected void rotate(BinaryNode<T> child, BinaryNode<T> parent) {
-        // TODO: Implement this method.
 
         // null check for parent and child
         if (child == null || parent == null) {
             throw new IllegalArgumentException("Can't have null nodes");
-            return; // do nothing get out of this method 
+            // do nothing get out of this method 
         }
 
         // checks if child is even the is the child of parent here 
-        if (parent.downRight() != child || parent.downLeft() != child) {
+        if (parent.downRight() != child && parent.downLeft() != child) {
             return; // the right and left children must equal the child 
         }
 
         // right child, left child, parent check 
 
-        if (child.isRightChild()) {
-            // child is right child 
-            // left rotate 
-            child.setLeft(parent); 
-            parent.setUp(child);
+        BinaryNode<T> grandParent = parent.up(); 
 
+        if (child.isRightChild()) {
+            // LEFT ROTATE
+            BinaryNode<T> movedSubtree = child.downLeft(); // subtree that gets moved from original spot in rotation
+
+            // turn the moveable subtree to the right child of the parent
+            parent.setRight(movedSubtree);
+            if (movedSubtree != null) {
+                movedSubtree.setUp(parent); 
+            }
+
+            // parent becomes left child of the child 
+            child.setLeft(parent); 
+            parent.setUp(child); // swap 
+
+            // updating grandparent 
+            child.setUp(grandParent); 
+            if (grandParent == null) {
+                this.root = child; 
+            } else if (grandParent.downLeft() == parent) {
+                // if parent was left child of grandparent
+                grandParent.setLeft(child); 
+            } else {
+                // if parent was right child of grandparent 
+                grandParent.setRight(child); 
+            }
 
         } else {
-            // child is left child 
-            // right rotate 
-            child.setRight(parent); 
-            parent.setUp(child); 
             
+            // RIGHT ROTATE
+            BinaryNode<T> movedSubtree = child.downRight(); // subtree that gets moved from original spot in rotation
+
+            // turn the moveable subtree to the left child of the parent
+            parent.setLeft(movedSubtree);
+            if (movedSubtree != null) {
+                movedSubtree.setUp(parent); 
+            }
+
+            // parent becomes right  child of the child 
+            child.setRight(parent); 
+            parent.setUp(child); // swap 
+
+            // update grandparent
+            child.setUp(grandParent); 
+            if (grandParent == null) {
+                this.root = child; 
+            } else if (grandParent.downLeft() == parent) {
+                // if parent was left child of grandparent
+                grandParent.setLeft(child); 
+            } else {
+                // if parent was right child of grandparent 
+                grandParent.setRight(child); 
+            }
         }
     }
 

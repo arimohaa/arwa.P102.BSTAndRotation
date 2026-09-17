@@ -320,6 +320,39 @@ public class BSTRotation<T extends Comparable<T>> extends BinarySearchTree_Place
             return false; 
         }
 
+        // 0 shared children test: 
+        BinaryNode<Integer> parent = new BinaryNode<>(10); 
+        BinaryNode<Integer> child = new BinaryNode<>(5); 
+
+        parent.setLeft(child); 
+        child.setUp(parent); 
+
+        this.root = parent; 
+
+        rotate(child, parent); 
+
+        if (this.root != child) {
+            return false; 
+        }
+        if (child.up() != null) {
+            return false; 
+        }
+        if (child.downLeft() != null) {
+            return false; 
+        }
+        if (child.downRight() != parent) {
+            return false; 
+        }
+        if (parent.up() != child) {
+            return false; 
+        }
+        if (parent.downLeft() != null) {
+            return false;
+        }
+        if (parent.downRight() != null) {
+            return false; 
+        }
+        
         return true; 
 
 
